@@ -1,0 +1,5 @@
+.touchable {
+	border: 4px solid purple;
+	min-height: 300px;
+	max-width: 45%;
+}
