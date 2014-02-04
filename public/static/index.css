@@ -1,0 +1,19 @@
+body{
+	width: 100%;
+	border: 0;
+	margin: 0;
+}
+
+#readTouch-widget {
+	border: 3px solid purple;
+}
+
+
+.touchable {
+	background-color: aliceblue;
+	min-height: 300px;
+}
+
+canvas.touchable {
+	background-color: rgba(255,0,0,0.02);
+}

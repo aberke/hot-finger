@@ -1,0 +1,17 @@
+{
+	"Type": "MOVE",
+	"Data": {
+		"x": int,
+		"y": int,
+	},
+	"Client": int,
+}
+
+{
+	"Type": "DELETE",
+	"Data": {
+		"x": int,
+		"y": int,
+	},
+	"Client": int,
+}
