@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-    "github.com/aberke/readTouch/touches"
+    "github.com/aberke/hot-finger/touches"
 )
 
 

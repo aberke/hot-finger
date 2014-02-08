@@ -47,7 +47,6 @@ function main() {
 	container = document.getElementById('readTouch-widget');
 
 	addCanvas(container);
-	setListeners(container, move);
 
 	//timer = setInterval(update, 15);
 

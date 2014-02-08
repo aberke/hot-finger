@@ -1,14 +1,38 @@
+// client --> server
 {
 	"Type": "MOVE",
+	"Hotspots":  { "cellID": 1 },  // cell that touch entered
+	"Exitspots": { "cellID": -1}, // cell that touch left
+}
+// server --> client
+{
+	"Type": "UPDATE",
+	"Hotspots": { 		// maps {cellID: heat}
+		"cellID": int,
+		"cellID": int,
+		"cellID": int,
+		"cellID": int,
+		...
+	},
+}
+
+
+
+/* ----------------------------------- */
+
+
+
+
+{
+	"Type": "DELETE",
 	"Data": {
 		"x": int,
 		"y": int,
 	},
 	"Client": int,
 }
-
 {
-	"Type": "DELETE",
+	"Type": "MOVE",
 	"Data": {
 		"x": int,
 		"y": int,

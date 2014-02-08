@@ -19,8 +19,10 @@ type Client struct {
     server *Server
     ch     chan *Message
     doneCh chan bool
+    grid   int
+    cell   string  // "" at instantiation -- string representation of integer
 }
-func NewClient(ws *websocket.Conn, server *Server) *Client {
+func NewClient (ws *websocket.Conn, server *Server, grid int) *Client {
 
     if ws == nil {
         panic("ws cannot be nil")
@@ -33,10 +35,13 @@ func NewClient(ws *websocket.Conn, server *Server) *Client {
     ch := make(chan *Message, channelBufSize)
     doneCh := make(chan bool)
 
-    return &Client{maxClientId, ws, server, ch, doneCh}
+    return &Client{maxClientId, ws, server, ch, doneCh, grid, ""}
+}
+func (c *Client) Grid() int {
+    return c.grid;
 }
 
-func (c *Client) Write(msg *Message) {
+func (c *Client) Write (msg *Message) {
     select {
         case c.ch <- msg:
         default:
