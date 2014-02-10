@@ -8,9 +8,6 @@ import (
 
 
 
-
-
-
 type Message struct {
 	Type 		string `json:"Type"`
 	Hotspots   	map[string]int `json:"Hotspots"`

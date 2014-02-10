@@ -26,6 +26,7 @@ func main() {
 	go server.Listen()
 	
 	http.HandleFunc("/static/", serveStatic)
+	http.HandleFunc("/widget/", serveStatic)
 	http.HandleFunc("/", serveHome)
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
