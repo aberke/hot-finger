@@ -111,11 +111,6 @@ window.requestAnimFrame = (function(){
 	};
 })();
 function animloop() {
-		// start the update loop
-		// (function animloop(){
-		// 	requestAnimFrame(animloop);
-		// 	self.redraw();
-		// })();
 	requestAnimFrame(animloop);
 	for (var i=0; i<widgets.length; i++) {
 		widgets[i].onanimate();

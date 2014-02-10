@@ -25,7 +25,8 @@ function Widget(container, canvas, connection) {
 
 	this.onresize = function() {
 		console.log('onresize', this);
-		setCanvasSize(this.container, this.canvas);
+		Module.moduleFunctions.setCanvasSize(this.container, this.canvas);
+		this.grid.onresize();
 	}
 	this.onanimate = function() {
 		this.grid.onanimate();
@@ -133,8 +134,6 @@ function Grid(ctx, connection) {
 
 				new_c = new Touch(x, y)
 
-
-
 		TODO: setup again on resize events
 	*/
 
@@ -146,7 +145,7 @@ function Grid(ctx, connection) {
 	this.circles  = []; // store Cirlces -- Hotspots and Touches alike
 	this.touchCell; // the cell where the local finger is
 
-	this.cellSize = 50;
+	this.cellSize = 20;
 
 	this.width; // = this.canvas.width / 10; //  (int(width/cellSize))
 	this.height;
@@ -185,7 +184,7 @@ function Grid(ctx, connection) {
 		var originY = 0;
 		while(originY < this.height) {
 			this.cellsToCoordinates[cellID] = [originX, originY];
-			this.coordinatesToCell[[originX, originY]] = cellID
+			this.coordinatesToCell[[originX, originY]] = cellID;
 
 			cellID += 1;
 			originX += this.cellSize;
@@ -194,8 +193,9 @@ function Grid(ctx, connection) {
 				originY += this.cellSize;
 			}
 		}
-		console.log('this.cellsToCoordinates', this.cellsToCoordinates)
-		console.log('this.coordinatesToCell', this.coordinatesToCell);
+		this.coordinatesToCell.length = cellID;
+		this.cellsToCoordinates.length = cellID;
+		console.log('cells ', this.cellsToCoordinates.length)
 
 	}
 	this.recieveHotspots = function(hotspots) {
@@ -240,7 +240,6 @@ function Grid(ctx, connection) {
 			self.hotspots = {};
 		}
 
-
 		// add the new touch if it's there
 		var cell = self.getCell(self.hotX, self.hotY);
 		if (!cell) { // could be undefined: hotX/hotY undefined if untouched; or slightly off the grid in the leftover mod space
@@ -258,6 +257,9 @@ function Grid(ctx, connection) {
 	}
 	this.onanimate = function() {
 		this.redraw();
+	}
+	this.onresize = function() {
+		this.setup();
 	}
 
 

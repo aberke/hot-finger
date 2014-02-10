@@ -16,28 +16,27 @@ var maxClientId int = 0
 type Client struct {
     id     int
     ws     *websocket.Conn
-    server *Server
+    grid   *Grid
     ch     chan *Message
     doneCh chan bool
-    grid   int
     cell   string  // "" at instantiation -- string representation of integer
 }
-func NewClient (ws *websocket.Conn, server *Server, grid int) *Client {
+func NewClient (ws *websocket.Conn, grid *Grid) *Client {
 
     if ws == nil {
         panic("ws cannot be nil")
     }
-    if server == nil {
-        panic("server cannot be nil")
+    if grid == nil {
+        panic("grid cannot be nil")
     }
     maxClientId++
 
     ch := make(chan *Message, channelBufSize)
     doneCh := make(chan bool)
 
-    return &Client{maxClientId, ws, server, ch, doneCh, grid, ""}
+    return &Client{maxClientId, ws, grid, ch, doneCh, ""}
 }
-func (c *Client) Grid() int {
+func (c *Client) Grid() *Grid {
     return c.grid;
 }
 
@@ -45,9 +44,9 @@ func (c *Client) Write (msg *Message) {
     select {
         case c.ch <- msg:
         default:
-            c.server.Del(c)
+            c.grid.Del(c)
             err := fmt.Errorf("client %d is disconnected.", c.id)
-            c.server.Err(err)
+            c.grid.Err(err)
     }
 }
 
@@ -72,7 +71,7 @@ func (c *Client) listenWrite() {
 
             // receive done request
             case <-c.doneCh:
-                c.server.Del(c)
+                c.grid.Del(c)
                 c.doneCh <- true // for listenRead method
                 return
         }
@@ -86,7 +85,7 @@ func (c *Client) listenRead() {
 
             // receive done request
             case <-c.doneCh:
-                c.server.Del(c)
+                c.grid.Del(c)
                 c.doneCh <- true // for listenWrite method
                 return
 
@@ -97,10 +96,10 @@ func (c *Client) listenRead() {
                 if err == io.EOF {
                     c.doneCh <- true
                 } else if err != nil {
-                    c.server.Err(err)
+                    c.grid.Err(err)
                 } else {
                     msg.Client = c.id
-                    c.server.RecieveMessage(&msg)
+                    c.grid.RecieveMessage(&msg)
                 }
         }
     }
