@@ -1,7 +1,8 @@
 
 
 var HotFinger = function() {
-var HOST = "fb92612.ngrok.com";
+//var HOST = "fb92612.ngrok.com";
+var HOST = "hot-finger.herokuapp.com";
 
 
 var ModuleFunctions = function() {
