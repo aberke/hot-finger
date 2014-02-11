@@ -3,6 +3,7 @@
 var HotFinger = function() {
 //var HOST = "fb92612.ngrok.com";
 var HOST = "hot-finger.herokuapp.com";
+var DOMAIN = "https://" + HOST;
 
 
 var ModuleFunctions = function() {
@@ -11,6 +12,7 @@ var ModuleFunctions = function() {
 			BUT I also want the classes in their own file
 	*/	
 	this.HOST = HOST;
+	this.DOMAIN = DOMAIN;
 
 
 	function setListeners(touchable, moveCallback, untouchCallback) {
@@ -189,7 +191,7 @@ function main() {
 	// start the animation loop
 	animloop();
 }
-withScripts(["http://" + HOST + "/widget/objects.js"], main);
+withScripts([DOMAIN + "/widget/objects.js"], main);
 
 return {widgets: this.widgets};
 }();
