@@ -32,9 +32,10 @@
     <div id='main'>
 
         <section class='step' id='step-1'>
-            <div class='hot-finger-widget' id='grid-1'>
 
-                <div class='well' id='example-content'>
+            <div class='well' id='example-content'>
+                <div class='hot-finger-widget' id='grid-1'>
+
                     <h5>Sample Hot Finger Enabled Content</h5>
 
                     <p>Drag your finger or mouse over this.
@@ -43,8 +44,10 @@
                     <p>Create your own Hot Finger Widget with the instructions below.  Wrap your content in the customized code snippet you recieve, and you will have a customized heat map that will show in real time where your viewers are touching your content.</p>
 
                     <p>The magic is in the web sockets.</p>
-                </div> <!-- example-content -->
-            </div>
+                </div> <!-- widget -->
+            </div> <!-- example-content -->
+    <script type="text/javascript" src="/widget/hot-finger-widget.js"></script>
+
         </section>
         <section class='step' id='step-2'>
 
@@ -55,7 +58,7 @@
                 <pre class='snippet'>
     &lt;div class='hot-finger-widget' id='grid-{{gridID}}'&gt;
         <span class='mute'>... content ...</span>
-    &lt;/div&gt;</pre>
+    &lt;/div&gt;&lt;script type="text/javascript" src="{{domain}}/widget/hot-finger-widget.js"&gt;&lt;/script&gt;</pre>
             </span>
 
         </section>
@@ -66,11 +69,9 @@
 
             <div class='col-sm-5'>
                 <pre class='snippet'>
-&lt;h1&gt;Mrs. Dalloway&lt;/h1&gt;
-&lt;p&gt;Mrs. Dalloway said she would buy the flowers herself.&lt;/p&gt;
+<span class='mute'>&lt;p&gt;Mrs. Dalloway said she would buy the flowers herself.&lt;/p&gt;
     ...
-&lt;p&gt;For there she was&lt;/p&gt;
-                </pre>
+&lt;p&gt;For there she was&lt;/p&gt;</span></pre>
             </div>
 
             <div id='right-arrow' class='col-sm-1'>
@@ -79,12 +80,11 @@
 
             <div class='col-sm-6'>
                 <pre class='snippet'>
-&lt;div class='hot-finger-widget' id='grid-{{gridID || [YOUR-GRID-ID]}}'&gt;
-    <span class='mute'>&lt;h1&gt;Mrs. Dalloway&lt;/h1&gt;
-    &lt;p&gt;Mrs. Dalloway said she would buy the flowers herself.&lt;/p&gt;
+&lt;div class='hot-finger-widget' id='grid-{{gridID || "[YOUR-GRID-ID]"}}'&gt;
+    <span class='mute'>&lt;p&gt;Mrs. Dalloway said she would buy the flowers herself.&lt;/p&gt;
         ...
     &lt;p&gt;For there she was&lt;/p&gt;</span>
-&lt;/div&gt;</pre>
+&lt;/div&gt;&lt;script type="text/javascript" src="{{domain}}/widget/hot-finger-widget.js"&gt;&lt;/script&gt;</pre>
             </div>
 
         </div>
@@ -95,7 +95,6 @@
     </div> <!-- container -->
 
 
-	<script type="text/javascript" src="/widget/hot-finger-widget.js"></script>
 
 
 

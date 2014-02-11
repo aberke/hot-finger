@@ -8,7 +8,13 @@ function MainCntl($scope, HTTPService) {
 	$scope.gridID;
 
 	$scope.createCustomWidgetCode = function() {
-		$scope.gridID = '2';
+		HTTPService.httpGET('/new-grid-id').then(function(data) {
+			console.log('data', data)
+			$scope.gridID = data;
+		},
+		function(err) {
+			console.log('ERR:', err);
+		});
 	}
 
 }
