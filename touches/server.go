@@ -60,7 +60,6 @@ func (s *Server) Listen() {
 
 	// websocket handler
 	onConnect := func(ws *websocket.Conn) {
-		log.Println("onConnect")
 		defer func() {
 			err := ws.Close()
 			if err != nil {

@@ -65,8 +65,17 @@ var Connection = function(gridID) {
 		console.log('msg', msg)
 		this.send(msg);
 	}
+
+	var reconnect_tries = 0;
+	this.connect = function() {
+		reconnect_tries += 1;
+		if (reconnect_tries > 2) { return; }
+
+		this.ws = new WebSocket(Module.moduleFunctions.WS + this.endpoint);
+	}
 	this.init = function(messageCallbacks, callback) {
-		this.ws = new WebSocket("wss://" + Module.moduleFunctions.HOST + this.endpoint);
+		var self = this;
+		this.connect();
 
 		this.ws.onmessage = function(event) {
 			var msg = event.data;
@@ -78,7 +87,13 @@ var Connection = function(gridID) {
 				console.log("Recieved unrecognized message type: " + msg.Type);
 		};
 		this.ws.onopen = function(event) {
+			reconnect_tries = 0;
+			console.log('this.ws.onopen')
 			if (callback) callback();
+		};
+		this.ws.onclose = function(event) {
+			console.log('this.ws.onclose')
+			self.connect();
 		}
 	}
 } /* End of Connection */
@@ -203,7 +218,6 @@ function Grid(ctx, connection) {
 		this.cellsToCoordinates.length = cellID;
 	}
 	this.recieveHotspots = function(hotspots) {
-		console.log('recieveHotspots', hotspots)
 		this.hotspots = hotspots;
 	}
 
@@ -338,7 +352,7 @@ function Touch(ctx, x, y) {
 }
 Touch.prototype = new Circle();
 function Hotspot(ctx, x, y, heat) {
-	this.color = {'r': 255, 'g': 103, 'b': 0, 'a': 0.002};
+	this.color = {'r': 255, 'g': 103, 'b': 0, 'a': 0.001};
 	this.redraws_left = 130;
 	this.radius = 10*Math.sqrt(heat);
 	this.init(ctx, x, y);

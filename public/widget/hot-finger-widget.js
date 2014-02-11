@@ -1,9 +1,14 @@
 
 
 var HotFinger = function() {
-//var HOST = "fb92612.ngrok.com";
-var HOST = "hot-finger.herokuapp.com";
-var DOMAIN = "https://" + HOST;
+var HOST = "fb92612.ngrok.com";
+var DOMAIN = "http://" + HOST;
+var WS 	   = "ws://" + HOST;
+console.log(WS)
+
+// var HOST   = "hot-finger.herokuapp.com";
+// var DOMAIN = "https://" + HOST;
+// var WS 	   = "wss://" + HOST;
 
 
 var ModuleFunctions = function() {
@@ -13,6 +18,8 @@ var ModuleFunctions = function() {
 	*/	
 	this.HOST = HOST;
 	this.DOMAIN = DOMAIN;
+	this.WS = WS;
+console.log(this.WS)
 
 
 	function setListeners(touchable, moveCallback, untouchCallback) {
@@ -97,7 +104,8 @@ var ModuleFunctions = function() {
 		gridID: gridID,
 		withScripts: withScripts,
 		HOST: this.HOST,
-
+		DOMAIN: this.DOMAIN,
+		WS: this.WS,
 	}
 } /* End of ModuleFunctions */
 
