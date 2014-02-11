@@ -73,7 +73,22 @@ section.step h5{
 	margin-top: 20px;
 }
 
-
+footer{
+	width: 100%;
+	float: left;
+	padding: 0px 20px 20px 20px;
+}
+footer #links {
+	display: inline;
+	float: left;
+	text-align: left;
+}
+footer #links a {
+	display: block;
+}
+footer img {
+	float: right;
+}
 
 
 
