@@ -25,11 +25,15 @@ body{
 
 #main {
 	padding: 10px 15px;
+	border-bottom: 2px solid lavenderblush;
 }
 section.step {
 	margin: 10px 20px 20px 10px;
 	border-bottom: 1px solid lavenderblush;
 	padding-bottom: 20px;
+}
+section#step-3 {
+	border: none;
 }
 section.step h5{
 	font-weight: bold;
@@ -76,7 +80,7 @@ section.step h5{
 footer{
 	width: 100%;
 	float: left;
-	padding: 0px 20px 20px 20px;
+	padding: 20px;
 }
 footer #links {
 	display: inline;
