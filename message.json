@@ -1,4 +1,11 @@
+/* There are pings because Heroku will shut down the 
+	websocket connection after given time if there is no communication 
+*/
 
+
+/* -------------------------------------------
+		server -> client
+-------------------------------------------- */
 {
 	"Type": "UPDATE",
 	"Hotspots": { 		// maps {cellID: heat}
@@ -9,6 +16,22 @@
 		...
 	},
 }
+{
+	"Type": "PING"
+}
 
+/* -------------------------------------------
+		client -> server
+-------------------------------------------- */
+{
+	"Type": "MOVE",
+	"Hotspots": { 		
+		"cellID": 1,
+		"cellID": -1,
+	},
+}
 
+{
+	"Type": "PING"
+}
 

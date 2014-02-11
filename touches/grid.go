@@ -133,10 +133,8 @@ func (g *Grid) decrement(cellID string) {
 }
 /* send msg to all the clients */
 func (g *Grid) sendAll(msg *Message) {
-    for cId, c := range g.clients {
-        if (cId != msg.Client) {
-            c.Write(msg)
-        }
+    for _, c := range g.clients {
+        c.Write(msg)
     }
 }
 func (g *Grid) sendErrorMessage(cId int) {
@@ -157,9 +155,12 @@ func (g *Grid) recieveMessage(msg *Message) {
             client.cell = entered
 
             if hotspots := g.updateHotspots(); (hotspots != nil) {
-                msg := NewUpdateMessage(hotspots)
-                g.sendAll(msg)
+                m := NewUpdateMessage(hotspots)
+                g.sendAll(m)
             }
+
+        case "PING":    // send it right back to keep the connection alive
+            g.sendAll(msg)  // everyone else probably needs it too!
 
         default:
             log.Println("Unknown message type recieved: ", msg.Type)

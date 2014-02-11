@@ -2,13 +2,13 @@
 
 var HotFinger = function() {
 	
-// var HOST = "fb92612.ngrok.com";
-// var DOMAIN = "http://" + HOST;
-// var WS 	   = "ws://" + HOST;
+var HOST = "fb92612.ngrok.com";
+var DOMAIN = "http://" + HOST;
+var WS 	   = "ws://" + HOST;
 
-var HOST   = "hot-finger.herokuapp.com";
-var DOMAIN = "https://" + HOST;
-var WS 	   = "wss://" + HOST;
+// var HOST   = "hot-finger.herokuapp.com";
+// var DOMAIN = "https://" + HOST;
+// var WS 	   = "wss://" + HOST;
 
 
 var ModuleFunctions = function() {

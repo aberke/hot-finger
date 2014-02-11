@@ -16,11 +16,13 @@ function Widget(container, canvas, connection) {
 	this.ctx;
 
 
-
 	var self = this;
 	this.recieveUpdate = function(msg) {
 		console.log('recieveUpdate', msg)
 		self.grid.recieveHotspots(msg.Hotspots)
+	}
+	this.recievePing = function(msg) {
+		console.log('ping --> pong', msg);
 	}
 
 	this.onresize = function() {
@@ -39,9 +41,10 @@ function Widget(container, canvas, connection) {
 
 		
 		this.connection.init({"UPDATE": this.recieveUpdate,
+							  "PING": this.recievePing,
 						 });
 
-		this.grid = new Grid(this.ctx, connection);
+		this.grid = new Grid(this.ctx, this.connection);
 	}
 	this.init();
 } /* end of Widget */
@@ -51,11 +54,27 @@ var Connection = function(gridID) {
 	*/ 
 	this.ws;
 	this.endpoint = "/connect?grid=" + gridID;
+	var self = this;
+
+	/* Heroku will shut down the websocket connection after given time if there is no communication 
+		-> Solution: Pings if haven't heard in a while
+	*/
+
+	this.interval; // null until setInveral called
+	this.PING_INTERVAL = 30000;
+	this.lastHeard = Date.now();
+	this.pingOnInterval = function() {
+		if ((Date.now() - this.lastHeard) > this.PING_INTERVAL) {
+			this.sendPing();
+		}
+	};
 
 	this.send = function(msgBody) {
 		this.ws.send(JSON.stringify(msgBody));
 	}
-
+	this.sendPing = function() {
+		this.send({ "Type": "PING" });
+	}
 	this.sendMove = function(cellLeft, cellEntered) {
 		var msg = { "Type": "MOVE", "Hotspots": {},};
 		msg["Hotspots"][String(cellEntered)] = 1;
@@ -78,6 +97,8 @@ var Connection = function(gridID) {
 		this.connect();
 
 		this.ws.onmessage = function(event) {
+			lastHeard = Date.now();
+
 			var msg = event.data;
 			if (typeof msg === "string"){ msg = JSON.parse(msg); }
 
@@ -87,12 +108,16 @@ var Connection = function(gridID) {
 				console.log("Recieved unrecognized message type: " + msg.Type);
 		};
 		this.ws.onopen = function(event) {
+			lastHeard = Date.now();
+			self.interval = setInterval(function(){self.pingOnInterval()}, self.PING_INTERVAL);
+			
 			reconnect_tries = 0;
 			console.log('this.ws.onopen')
 			if (callback) callback();
 		};
 		this.ws.onclose = function(event) {
 			console.log('this.ws.onclose')
+			clearInterval(self.interval);
 			self.connect();
 		}
 	}
