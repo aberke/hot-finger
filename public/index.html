@@ -1,41 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="HotFingerApp">
 <head>
     <meta charset="utf-8">
-    <title>Touch</title>
+    <title>Hot Finger</title>
     <!-- disable user scalable -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="author" content="Alexandra Berke">
+    <meta name="author" content="Alexandra Berke of Huffpost Labs">
     <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
     
     <!-- stylesheets -->
 	<link rel="stylesheet" href="/static/index.css">
+    <link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- vendor javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+    <!-- in house javascript -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/controllers.js"></script>
+    <script src="/static/js/services.js"></script>
 
 </head>
-<body>
-	<h1 id='title'>HOT FINGER</h1>
-    <p id='mouse'></p>
-
-
-    <div class='hot-finger-widget' id='grid-1'>
-
-        <div>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-            <p>Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page Dummy page </p>
-        </div>
-
-
-
+<body ng-controller="MainCntl">
+<div class="container">
+    <div class="header">
+        <a href="/">
+            <h3 id='title' class="text-muted"><img width='60px' height='40px' src="/static/img/flames.png" />Hot Finger</h3>
+        </a>
     </div>
 
+    <div id='main'>
+
+        <section class='step' id='step-1'>
+            <div class='hot-finger-widget' id='grid-1'>
+
+                <div class='well' id='example-content'>
+                    <h5>Sample Hot Finger Enabled Content</h5>
+
+                    <p>Drag your finger or mouse over this.
+                    The content is wrapped in a <em>Hot Finger Widget</em>, which turns any HTML content into a heat map.  The heat map intends to illustrate where the viewers are interacting with the content.</p>
+
+                    <p>Create your own Hot Finger Widget with the instructions below.  Wrap your content in the customized code snippet you recieve, and you will have a customized heat map that will show in real time where your viewers are touching your content.</p>
+
+                    <p>The magic is in the web sockets.</p>
+                </div> <!-- example-content -->
+            </div>
+        </section>
+        <section class='step' id='step-2'>
+
+            <div ng-click='createCustomWidgetCode()' ng-show="!gridID" class='btn btn-warning'>Create My Customized Widget</div>
+
+            <span ng-show="gridID">
+                <h5>Customized Widget Snippet</h5>
+                <pre class='snippet'>
+    &lt;div class='hot-finger-widget' id='grid-{{gridID}}'&gt;
+        <span class='mute'>... content ...</span>
+    &lt;/div&gt;</pre>
+            </span>
+
+        </section>
+
+        <section class='step' id='step-3'>
+            <h5>Wrap your content</h5>
+            <div class='row'>
+
+            <div class='col-sm-5'>
+                <pre class='snippet'>
+&lt;h1&gt;Mrs. Dalloway&lt;/h1&gt;
+&lt;p&gt;Mrs. Dalloway said she would buy the flowers herself.&lt;/p&gt;
+    ...
+&lt;p&gt;For there she was&lt;/p&gt;
+                </pre>
+            </div>
+
+            <div id='right-arrow' class='col-sm-1'>
+                &rArr;
+            </div>
+
+            <div class='col-sm-6'>
+                <pre class='snippet'>
+&lt;div class='hot-finger-widget' id='grid-{{gridID || [YOUR-GRID-ID]}}'&gt;
+    <span class='mute'>&lt;h1&gt;Mrs. Dalloway&lt;/h1&gt;
+    &lt;p&gt;Mrs. Dalloway said she would buy the flowers herself.&lt;/p&gt;
+        ...
+    &lt;p&gt;For there she was&lt;/p&gt;</span>
+&lt;/div&gt;</pre>
+            </div>
+
+        </div>
+        </section>
+
+
+    </div> <!-- main -->
+    </div> <!-- container -->
+
+
 	<script type="text/javascript" src="/widget/hot-finger-widget.js"></script>
+
+
+
+    <script src="/static/lib/bootstrap/js/tooltip.js"></script>
+    <script src="/static/lib/bootstrap/js/popover.js"></script>
+    <script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
 </body>

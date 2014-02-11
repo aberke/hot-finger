@@ -3,17 +3,69 @@ body{
 	border: 0;
 	margin: 0;
 }
-
-.hot-finger-widget {
-	border: 3px solid purple;
+.header{
+	border-bottom: 2px solid aquamarine;
+	margin:10px;
+}
+.header #title {
+	margin-bottom: 0;
+}
+.header #title img {
+	margin-right: 10px;
 }
 
 
-.touchable {
-	/*background-color: aliceblue;*/
-	min-height: 300px;
+#main {
+	padding: 10px;
+}
+section.step {
+	margin: 10px 20px 20px 10px;
+	border-bottom: 1px solid lavenderblush;
+	padding-bottom: 20px;
+}
+section.step h5{
+	font-weight: bold;
+}
+#example-content {
+	background-color: white;
+}
+#step-1 h5 {
+	color: purple;
+}
+#step-2 h5 {
+	color: indianred;
+}
+#step-3 h5 {
+	color: cadetblue;
+}
+#step-2 .snippet {
+	background-color: white;
+	color: brown;
+	font-weight: bold;
+	border: 2px solid lightsalmon;
+}
+#step-2 .snippet .mute {
+	font-weight: normal;
+	color: chocolate;
 }
 
-canvas.touchable {
-	/*background-color: rgba(255,0,0,0.02);*/
+#step-3 .snippet {
+	background-color: white;
+	border: 2px solid darkseagreen;
+	font-weight: bold;
+	color: darkred;
 }
+#step-3 .snippet .mute{
+	font-weight: normal;
+	color: firebrick;
+}
+#right-arrow {
+	font-size: 26px;
+	text-align: center;
+	margin-top: 20px;
+}
+
+
+
+
+
