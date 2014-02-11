@@ -13,7 +13,7 @@
     <link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- vendor javascript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
     <!-- in house javascript -->
     <script src="/static/js/app.js"></script>
@@ -30,7 +30,7 @@
     </div>
 
     <div id='main'>
-
+        <!-- ************** step-1 ***************** -->
         <section class='step' id='step-1'>
 
             <div class='well' id='example-content'>
@@ -44,14 +44,18 @@
                     <p>Create your own Hot Finger Widget with the instructions below.  Wrap your content in the customized code snippet you recieve, and you will have a customized heat map that will show in real time where your viewers are touching your content.</p>
 
                     <p>The magic is in the web sockets.</p>
+
                 </div> <!-- widget -->
             </div> <!-- example-content -->
     <script type="text/javascript" src="/widget/hot-finger-widget.js"></script>
 
-        </section>
+        </section> <!-- ************** step-1 ***************** -->
+
+
+        <!-- ************** step-2 ***************** -->
         <section class='step' id='step-2'>
 
-            <div ng-click='createCustomWidgetCode()' ng-show="!gridID" class='btn btn-warning'>Create My Customized Widget</div>
+            <div ng-click='getGridId()' ng-show="!gridID" class='btn btn-warning'>Create My Customized Widget</div>
 
             <span ng-show="gridID">
                 <h5>Customized Widget Snippet</h5>
@@ -61,8 +65,9 @@
     &lt;/div&gt;&lt;script type="text/javascript" src="{{domain}}/widget/hot-finger-widget.js"&gt;&lt;/script&gt;</pre>
             </span>
 
-        </section>
+        </section><!-- ************** step-2 ***************** -->
 
+        <!-- ************** step-3 ***************** -->
         <section class='step' id='step-3'>
             <h5>Wrap your content</h5>
             <div class='row'>
@@ -88,7 +93,7 @@
             </div>
 
         </div>
-        </section>
+        </section><!-- ************** step-3 ***************** -->
 
 
     </div> <!-- main -->
@@ -98,7 +103,7 @@
 
 
 
-    <script src="/static/lib/bootstrap/js/tooltip.js"></script>
+<!--     <script src="/static/lib/bootstrap/js/tooltip.js"></script>
     <script src="/static/lib/bootstrap/js/popover.js"></script>
-    <script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/lib/bootstrap/js/bootstrap.min.js"></script> -->
 </body>

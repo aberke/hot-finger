@@ -93,6 +93,7 @@ func (c *Client) listenRead() {
             default:
                 var msg Message
                 err := websocket.JSON.Receive(c.ws, &msg)
+                //fmt.Println("msg--- ", msg)
                 if err == io.EOF {
                     c.doneCh <- true
                 } else if err != nil {

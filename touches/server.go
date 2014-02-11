@@ -60,7 +60,7 @@ func (s *Server) Listen() {
 
 	// websocket handler
 	onConnect := func(ws *websocket.Conn) {
-		log.Println("0")
+		log.Println("onConnect")
 		defer func() {
 			err := ws.Close()
 			if err != nil {
@@ -69,6 +69,7 @@ func (s *Server) Listen() {
 		}()
 		gId, err := strconv.Atoi(ws.Request().URL.Query()["grid"][0])
 		if err != nil {
+			log.Println("onConnect ERROR: ", err)
 			return
 		}
 

@@ -59,7 +59,7 @@ var Connection = function(gridID) {
 	this.sendMove = function(cellLeft, cellEntered) {
 		var msg = { "Type": "MOVE", "Hotspots": {},};
 		msg["Hotspots"][String(cellEntered)] = 1;
-		if (cellLeft) {
+		if (cellLeft >= 0) {
 			msg["Hotspots"][String(cellLeft)] = -1;
 		}
 		console.log('msg', msg)
@@ -145,7 +145,7 @@ function Grid(ctx, connection) {
 	this.circles  = []; // store Cirlces -- Hotspots and Touches alike
 	this.touchCell; // the cell where the local finger is
 
-	this.cellSize = 20;
+	this.cellSize = 40;
 
 	this.width; // = this.canvas.width / 10; //  (int(width/cellSize))
 	this.height;
@@ -156,13 +156,19 @@ function Grid(ctx, connection) {
 
 	this.getCell = function(x, y) {
 		/* does work of mapping coordinates to cell */
+		if (x == null || y == null) { return null; } /* for some reason null-0 = 0 WTF */
+
 		var originX = x - (x % this.cellSize);
 		var originY = y - (y % this.cellSize);
+		//console.log('getCell', x, y, originX, originY, this.coordinatesToCell)
 		return this.coordinatesToCell[[originX, originY]];
 	}
 	this.getCellCenter = function(cellID) { 
 		/* maps cellID to middle's [x,y] coordinates */
 		var coordinates = this.cellsToCoordinates[cellID];
+		if (!coordinates) {
+			return null;
+		}
 		var centerX = coordinates[0] + this.cellSize/2;
 		var centerY = coordinates[1] + this.cellSize/2;
 		return [centerX, centerY];
@@ -182,32 +188,30 @@ function Grid(ctx, connection) {
 		var cellID = 0;
 		var originX = 0;
 		var originY = 0;
-		while(originY < this.height) {
+		while(originY <= this.height) {
 			this.cellsToCoordinates[cellID] = [originX, originY];
 			this.coordinatesToCell[[originX, originY]] = cellID;
 
 			cellID += 1;
 			originX += this.cellSize;
-			if (originX >= this.width) {
+			if (originX > this.width) {
 				originX = 0;
 				originY += this.cellSize;
 			}
 		}
 		this.coordinatesToCell.length = cellID;
 		this.cellsToCoordinates.length = cellID;
-		console.log('cells ', this.cellsToCoordinates.length)
-
 	}
 	this.recieveHotspots = function(hotspots) {
 		console.log('recieveHotspots', hotspots)
 		this.hotspots = hotspots;
-		console.log(this.hotspots)
 	}
 
 	var self = this;
 	var move = function(x, y) {
 		self.hotX = x;
 		self.hotY = y;
+		//self.redraw() /* for debugging */
 	}
 	var untouch = function() {
 		self.hotX = null;
@@ -231,18 +235,18 @@ function Grid(ctx, connection) {
 		if (self.hotspots) {
 			for (var hotCell in self.hotspots) {
 
-				console.log('hotCell', hotCell, self.hotspots[hotCell])
-				var coordinates = self.getCellCenter(hotCell);			
-
-				var new_c = new Hotspot(this.ctx, coordinates[0], coordinates[1], self.hotspots[hotCell]);
-				self.circles.push(new_c);
+				var coordinates = self.getCellCenter(hotCell);
+				if (coordinates) {
+					var new_c = new Hotspot(this.ctx, coordinates[0], coordinates[1], self.hotspots[hotCell]);
+					self.circles.push(new_c);
+				}		
 			}
 			self.hotspots = {};
 		}
 
 		// add the new touch if it's there
 		var cell = self.getCell(self.hotX, self.hotY);
-		if (!cell) { // could be undefined: hotX/hotY undefined if untouched; or slightly off the grid in the leftover mod space
+		if (cell == null || cell == undefined) { // could be undefined: hotX/hotY undefined if untouched; or slightly off the grid in the leftover mod space
 			return;
 		}
 		if (cell != self.touchCell) {
@@ -280,8 +284,6 @@ function Circle(ctx, x, y) {
 	this.ctx;
 	this.x;
 	this.y;
-	this.x_px;
-	this.y_px;
 	
 	this.lineWidth = 1;
 	this.radius;
@@ -293,12 +295,12 @@ function Circle(ctx, x, y) {
 		return ("rgba(" + this.color.r + "," 
 						+ this.color.g + "," 
 						+ this.color.b + "," 
-						+ (0.01*this.redraws_left) + ")");
+						+ (this.color.a*this.redraws_left) + ")");
 	}
 
 	this.erase = function() {
-		var originX = this.x_px - this.radius - this.lineWidth;
-		var originY = this.y_px - this.radius - this.lineWidth;
+		var originX = this.x - this.radius - this.lineWidth;
+		var originY = this.y - this.radius - this.lineWidth;
 		var size = 2*(this.radius + this.lineWidth);
 		this.ctx.clearRect(originX, originY, size, size);
 	}
@@ -307,7 +309,7 @@ function Circle(ctx, x, y) {
 		this.redraws_left --;
 
 		this.ctx.beginPath();
-		this.ctx.arc(this.x_px, this.y_px, this.radius, 0, 2*Math.PI, true);
+		this.ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI, true);
 
 		var fill = this.getFillColor();
 		this.ctx.fillStyle = fill;
@@ -323,22 +325,21 @@ function Circle(ctx, x, y) {
 		this.ctx = ctx;
 		this.x = x;
 		this.y = y;
-		this.x_px = x - this.ctx.canvas.offsetLeft;
-		this.y_px = y - this.ctx.canvas.offsetTop;
 
 		this.draw();
 	}
 } /* End of Circle */
 
 function Touch(ctx, x, y) {
+	this.color = {'r': 200, 'g': 0, 'b': 200, 'a': 0.005};
 	this.redraws_left = 20;
-	this.radius = 20;
+	this.radius = 15;
 	this.init(ctx, x, y);
 }
 Touch.prototype = new Circle();
 function Hotspot(ctx, x, y, heat) {
-	this.color = {'r': 200, 'g': 0, 'b': 0};
-	this.redraws_left = 100;
+	this.color = {'r': 255, 'g': 103, 'b': 0, 'a': 0.002};
+	this.redraws_left = 130;
 	this.radius = 10*Math.sqrt(heat);
 	this.init(ctx, x, y);
 }

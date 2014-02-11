@@ -26,10 +26,10 @@ func main() {
 	server := touches.NewServer()
 	go server.Listen()
 	
+	http.HandleFunc("/new-grid-id", getNewGridId)
 	http.HandleFunc("/static/", serveStatic)
 	http.HandleFunc("/widget/", serveStatic)
 	http.HandleFunc("/", serveHome)
-	http.HandleFunc("/new-grid-id", getNewGridId)
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatalf("Error listening, %v", err)
@@ -43,7 +43,6 @@ func getNewGridId(w http.ResponseWriter, r *http.Request) {
 		newGridId = newGridId + 1
 	}
 	lastNewGridId = newGridId
-	log.Println("newGridId: ", newGridId)
 	fmt.Fprintf(w, strconv.FormatInt(newGridId, 10))
 }
 

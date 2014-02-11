@@ -13,11 +13,13 @@ this.HOST = HOST;
 
 
 function setListeners(touchable, moveCallback, untouchCallback) {
-	var move = moveCallback;
+	var touchable = touchable;
+	var move = function(e) {
+		moveCallback(e.pageX - touchable.offsetLeft, e.pageY - touchable.offsetTop)
+	}
 	var untouch = untouchCallback;
 
 
-	var eventCapture = false; // you probably want to use this as true!
 	var eventCapture = false; // you probably want to use this as true!
 
 	touchable.addEventListener('touchstart', touchstart, eventCapture);
@@ -30,6 +32,7 @@ function setListeners(touchable, moveCallback, untouchCallback) {
 	touchable.addEventListener('mousemove', mousemove, eventCapture);
 
 
+
 	function touchstart(e) {
 		touchmove(e);
 	}
@@ -40,19 +43,18 @@ function setListeners(touchable, moveCallback, untouchCallback) {
 		// If there's exactly one finger inside this element
 		if (e.targetTouches && e.targetTouches.length == 1) {
 			var touch = e.targetTouches[0];
-			move(touch.pageX, touch.pageY);
+			move(touch);
 		}
 	}
 	/* hacky way of simulating touch in desktop browser */
 	var mouseIsDown = false;
 	function mousemove(e) {
 		if (!mouseIsDown) return;
-
-		move(e.pageX, e.pageY);
+		move(e);
 	}
 	function mousedown(e) {
 		mouseIsDown = true;
-		move(e.pageX, e.pageY);
+		move(e);
 	}
 	function mouseup(e) {
 		mouseIsDown = false;
@@ -131,7 +133,6 @@ var withScripts = function(srcList, callback) {
             callback();
         }
     }
-
 	for (var i=0; i<numScripts; i++) {
 
 		var script_tag = document.createElement('script');
@@ -174,6 +175,7 @@ function main() {
 	var widgetContainers = document.getElementsByClassName('hot-finger-widget');
 	for (var i=0; i<widgetContainers.length; i++) {
 		var container = widgetContainers[0];
+		// var parent = container.parentNode;
 		var gridID = this.moduleFunctions.gridID(container);
 		var canvas = this.moduleFunctions.addCanvas(container, gridID);
 		var connection = new this.hotFingerObjects.Connection(gridID);
