@@ -166,7 +166,6 @@ func (g *Grid) recieveMessage(msg *Message) {
     }
 }
 func (g *Grid) addClientConnection(c *Client) {
-                log.Println("2")
     cId := c.id
     g.clients[cId] = c
 

@@ -5,97 +5,97 @@ var HOST = "fb92612.ngrok.com";
 
 
 var ModuleFunctions = function() {
-/* I want the functions below to be Global within all HotFinger stuff
-	-> I want the Object Classes to have access
-		BUT I also want the classes in their own file
-*/	
-this.HOST = HOST;
+	/* I want the functions below to be Global within all HotFinger stuff
+		-> I want the Object Classes to have access
+			BUT I also want the classes in their own file
+	*/	
+	this.HOST = HOST;
 
 
-function setListeners(touchable, moveCallback, untouchCallback) {
-	var touchable = touchable;
-	var move = function(e) {
-		moveCallback(e.pageX - touchable.offsetLeft, e.pageY - touchable.offsetTop)
-	}
-	var untouch = untouchCallback;
+	function setListeners(touchable, moveCallback, untouchCallback) {
+		var touchable = touchable;
+		var move = function(e) {
+			moveCallback(e.pageX - touchable.offsetLeft, e.pageY - touchable.offsetTop)
+		}
+		var untouch = untouchCallback;
 
 
-	var eventCapture = false; // you probably want to use this as true!
+		var eventCapture = false; // you probably want to use this as true!
 
-	touchable.addEventListener('touchstart', touchstart, eventCapture);
-	touchable.addEventListener('touchend', touchend, eventCapture);
-	touchable.addEventListener('touchmove', touchmove, eventCapture);
+		touchable.addEventListener('touchstart', touchstart, eventCapture);
+		touchable.addEventListener('touchend', touchend, eventCapture);
+		touchable.addEventListener('touchmove', touchmove, eventCapture);
 
-	// my desktop way of simulating touchmove...
-	touchable.addEventListener('mousedown', mousedown, eventCapture);
-	touchable.addEventListener('mouseup', mouseup, eventCapture);
-	touchable.addEventListener('mousemove', mousemove, eventCapture);
+		// my desktop way of simulating touchmove...
+		touchable.addEventListener('mousedown', mousedown, eventCapture);
+		touchable.addEventListener('mouseup', mouseup, eventCapture);
+		touchable.addEventListener('mousemove', mousemove, eventCapture);
 
 
 
-	function touchstart(e) {
-		touchmove(e);
-	}
-	function touchend(e) {
-		untouch();
-	}
-	function touchmove(e) {
-		// If there's exactly one finger inside this element
-		if (e.targetTouches && e.targetTouches.length == 1) {
-			var touch = e.targetTouches[0];
-			move(touch);
+		function touchstart(e) {
+			touchmove(e);
+		}
+		function touchend(e) {
+			untouch();
+		}
+		function touchmove(e) {
+			// If there's exactly one finger inside this element
+			if (e.targetTouches && e.targetTouches.length == 1) {
+				var touch = e.targetTouches[0];
+				move(touch);
+			}
+		}
+		/* hacky way of simulating touch in desktop browser */
+		var mouseIsDown = false;
+		function mousemove(e) {
+			if (!mouseIsDown) return;
+			move(e);
+		}
+		function mousedown(e) {
+			mouseIsDown = true;
+			move(e);
+		}
+		function mouseup(e) {
+			mouseIsDown = false;
+			untouch();
 		}
 	}
-	/* hacky way of simulating touch in desktop browser */
-	var mouseIsDown = false;
-	function mousemove(e) {
-		if (!mouseIsDown) return;
-		move(e);
+
+	function gridID(container) {
+		return container.id.split("-")[1];
 	}
-	function mousedown(e) {
-		mouseIsDown = true;
-		move(e);
+	/* add the canvas as the first child of the container */
+	function addCanvas(container, gridID) {
+		var canvasID = "hot-finger-canvas-" + gridID;
+		var canvasHTML = "<canvas id='" + canvasID + "' class='touchable'></canvas>";
+		container.innerHTML = canvasHTML + container.innerHTML;
+		canvas = document.getElementById(canvasID);
+
+		canvas.style.position = 'absolute';
+		setCanvasSize(container, canvas);
+		return canvas;
 	}
-	function mouseup(e) {
-		mouseIsDown = false;
-		untouch();
+	/* check if canvas is supported -- technique used by modernizr */
+	function isCanvasSupported(){
+		var elem = document.createElement('canvas');
+		return !!(elem.getContext && elem.getContext('2d'));
 	}
-}
+	function setCanvasSize(container, canvas) {
+		canvas.width = container.clientWidth;
+		canvas.height = container.clientHeight;
+	}
 
-function gridID(container) {
-	return container.id.split("-")[1];
-}
-/* add the canvas as the first child of the container */
-function addCanvas(container, gridID) {
-	var canvasID = "hot-finger-canvas-" + gridID;
-	var canvasHTML = "<canvas id='" + canvasID + "' class='touchable'></canvas>";
-	container.innerHTML = canvasHTML + container.innerHTML;
-	canvas = document.getElementById(canvasID);
+	return {
+		setCanvasSize: setCanvasSize,
+		addCanvas: addCanvas,
+		isCanvasSupported: isCanvasSupported,
+		setListeners: setListeners,
+		gridID: gridID,
+		withScripts: withScripts,
+		HOST: this.HOST,
 
-	canvas.style.position = 'absolute';
-	setCanvasSize(container, canvas);
-	return canvas;
-}
-/* check if canvas is supported -- technique used by modernizr */
-function isCanvasSupported(){
-	var elem = document.createElement('canvas');
-	return !!(elem.getContext && elem.getContext('2d'));
-}
-function setCanvasSize(container, canvas) {
-	canvas.width = container.clientWidth;
-	canvas.height = container.clientHeight;
-}
-
-return {
-	setCanvasSize: setCanvasSize,
-	addCanvas: addCanvas,
-	isCanvasSupported: isCanvasSupported,
-	setListeners: setListeners,
-	gridID: gridID,
-	withScripts: withScripts,
-	HOST: this.HOST,
-
-}
+	}
 } /* End of ModuleFunctions */
 
 
@@ -183,7 +183,6 @@ function main() {
 		var widget = new this.hotFingerObjects.Widget(container, canvas, connection);
 		this.widgets.push(widget);
 	}
-	console.log(this.widgets)
 	window.onresize = onresize;
 
 	// start the animation loop
