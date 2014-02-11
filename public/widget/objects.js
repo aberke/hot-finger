@@ -66,7 +66,7 @@ var Connection = function(gridID) {
 		this.send(msg);
 	}
 	this.init = function(messageCallbacks, callback) {
-		this.ws = new WebSocket("ws://" + Module.moduleFunctions.HOST + this.endpoint);
+		this.ws = new WebSocket("wss://" + Module.moduleFunctions.HOST + this.endpoint);
 
 		this.ws.onmessage = function(event) {
 			var msg = event.data;
