@@ -1,0 +1,11 @@
+{
+	"ImportPath": "github.com/aberke/hot-finger",
+	"GoVersion": "go1.2",
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/go.net/websocket",
+			"Comment": "null-103",
+			"Rev": "127da548775d5a99454e66105c3e6950d63cf1ec"
+		}
+	]
+}
