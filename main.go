@@ -29,6 +29,7 @@ func main() {
 	http.HandleFunc("/new-grid-id", getNewGridId)
 	http.HandleFunc("/static/", serveStatic)
 	http.HandleFunc("/widget/", serveStatic)
+	http.HandleFunc("/widget.js", serveWidget)
 	http.HandleFunc("/", serveHome)
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
@@ -49,6 +50,9 @@ func getNewGridId(w http.ResponseWriter, r *http.Request) {
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./public/")
+}
+func serveWidget(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./public/widget/hot-finger-widget.js")
 }
 func serveStatic(w http.ResponseWriter, r *http.Request) {
 	var staticFileHandler = http.FileServer(http.Dir("./public/"))
