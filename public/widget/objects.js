@@ -2,10 +2,64 @@
 /* --------------------------------------------------------------- 
 			File of Object Classes
 --------------------------------------------------------------- */
-
+console.log('local object.js')
 var HotFingerObjects = function() {
-	var Module = this;
+	console.log('new HotFingerObjects')
 
+/* ------------ utility functions ------------- */
+
+function setCanvasSize(container, canvas) {
+	canvas.width = container.clientWidth;
+	canvas.height = container.clientHeight;
+}
+function setListeners(touchable, moveCallback, untouchCallback) {
+	var touchable = touchable;
+	var move = function(e) {
+		moveCallback(e.pageX - touchable.offsetLeft, e.pageY - touchable.offsetTop)
+	}
+	var untouch = untouchCallback;
+
+
+	var eventCapture = false; // you probably want to use this as true!
+
+	touchable.addEventListener('touchstart', touchstart, eventCapture);
+	touchable.addEventListener('touchend', touchend, eventCapture);
+	touchable.addEventListener('touchmove', touchmove, eventCapture);
+
+	// my desktop way of simulating touchmove...
+	touchable.addEventListener('mousedown', mousedown, eventCapture);
+	touchable.addEventListener('mouseup', mouseup, eventCapture);
+	touchable.addEventListener('mousemove', mousemove, eventCapture);
+
+	function touchstart(e) {
+		touchmove(e);
+	}
+	function touchend(e) {
+		untouch();
+	}
+	function touchmove(e) {
+		// If there's exactly one finger inside this element
+		if (e.targetTouches && e.targetTouches.length == 1) {
+			var touch = e.targetTouches[0];
+			move(touch);
+		}
+	}
+	/* hacky way of simulating touch in desktop browser */
+	var mouseIsDown = false;
+	function mousemove(e) {
+		if (!mouseIsDown) return;
+		move(e);
+	}
+	function mousedown(e) {
+		mouseIsDown = true;
+		move(e);
+	}
+	function mouseup(e) {
+		mouseIsDown = false;
+		untouch();
+	}
+}
+/* ------------ utility functions above ------------- */
 
 function Widget(container, canvas, connection) {
 	this.grid;
@@ -27,7 +81,7 @@ function Widget(container, canvas, connection) {
 
 	this.onresize = function() {
 		console.log('onresize', this);
-		Module.moduleFunctions.setCanvasSize(this.container, this.canvas);
+		setCanvasSize(this.container, this.canvas);
 		this.grid.onresize();
 	}
 	this.onanimate = function() {
@@ -36,10 +90,8 @@ function Widget(container, canvas, connection) {
 
 
 	this.init = function() {
+		setCanvasSize(this.container, this.canvas);
 		this.ctx = this.canvas.getContext('2d');
-
-
-		
 		this.connection.init({"UPDATE": this.recieveUpdate,
 							  "PING": this.recievePing,
 						 });
@@ -48,12 +100,12 @@ function Widget(container, canvas, connection) {
 	}
 	this.init();
 } /* end of Widget */
-var Connection = function(gridID) {
+var Connection = function(gridID, WS) {
 	/* Each WidgetModule has its own connection 
 		handles communication between the local Grid and the server Grid
-	*/ 
+	*/
 	this.ws;
-	this.endpoint = "/connect?grid=" + gridID;
+	this.endpoint = (WS + "/connect?grid=" + gridID);
 	var self = this;
 
 	/* Heroku will shut down the websocket connection after given time if there is no communication 
@@ -90,7 +142,7 @@ var Connection = function(gridID) {
 		reconnect_tries += 1;
 		if (reconnect_tries > 2) { return; }
 
-		this.ws = new WebSocket(Module.moduleFunctions.WS + this.endpoint);
+		this.ws = new WebSocket(this.endpoint);
 	}
 	this.init = function(messageCallbacks, callback) {
 		var self = this;
@@ -308,7 +360,7 @@ function Grid(ctx, connection) {
 
 	this.init = function() {
 		var self = this;
-		Module.moduleFunctions.setListeners(this.ctx.canvas, move, untouch);
+		setListeners(this.ctx.canvas, move, untouch);
 		this.setup();
 	}
 	this.init();
