@@ -1,12 +1,39 @@
 
 /* --------------------------------------------------------------- 
 			File of Object Classes
+
+s = document.createElement('script');
+s.setAttribute('src',"http://4d731c8b.ngrok.com/widget/objects.js");
+s.onload=function(){console.log('loaded')};
+document.getElementsByTagName("head")[0].appendChild(s);
+o = new HotFingerObjects();
+w0 = widgets[0];
+w = new o.Widget(w0.container,w0.canvas,w0.connection);
+
+function animloop() {
+	requestAnimFrame(animloop);
+	for (var i=0; i<widgets.length; i++) {
+		w.onanimate();
+	}
+}
+
 --------------------------------------------------------------- */
 console.log('local object.js')
 var HotFingerObjects = function() {
-	console.log('new HotFingerObjects')
 
 /* ------------ utility functions ------------- */
+
+function findPos(obj) {
+	/* borrowed from http://www.quirksmode.org */
+	var curleft = curtop = 0;
+	if (obj.offsetParent) {
+		do {
+			curleft += obj.offsetLeft;
+			curtop 	+= obj.offsetTop;
+		} while (obj = obj.offsetParent);
+	}
+	return [curleft,curtop];
+};
 
 function setCanvasSize(container, canvas) {
 	canvas.width = container.clientWidth;
@@ -14,8 +41,9 @@ function setCanvasSize(container, canvas) {
 }
 function setListeners(touchable, moveCallback, untouchCallback) {
 	var touchable = touchable;
+	var position = findPos(touchable);
 	var move = function(e) {
-		moveCallback(e.pageX - touchable.offsetLeft, e.pageY - touchable.offsetTop)
+		moveCallback(e.pageX - position[0], e.pageY - position[1])
 	}
 	var untouch = untouchCallback;
 
@@ -62,6 +90,7 @@ function setListeners(touchable, moveCallback, untouchCallback) {
 /* ------------ utility functions above ------------- */
 
 function Widget(container, canvas, connection) {
+	//this.name = "I'M LOCAL!";
 	this.grid;
 
 	this.connection = connection;
@@ -133,7 +162,7 @@ var Connection = function(gridID, WS) {
 		if (cellLeft >= 0) {
 			msg["Hotspots"][String(cellLeft)] = -1;
 		}
-		console.log('msg', msg)
+		console.log('sending msg', msg)
 		this.send(msg);
 	}
 
@@ -225,8 +254,6 @@ function Grid(ctx, connection) {
 						touches.push(c)
 
 				new_c = new Touch(x, y)
-
-		TODO: setup again on resize events
 	*/
 
 	// coordinates where the finger currently is
@@ -386,6 +413,7 @@ function Circle(ctx, x, y) {
 		return ("rgba(" + this.color.r + "," 
 						+ this.color.g + "," 
 						+ this.color.b + "," 
+						//+ "1)");
 						+ (this.color.a*this.redraws_left) + ")");
 	}
 
@@ -395,7 +423,6 @@ function Circle(ctx, x, y) {
 		var size = 2*(this.radius + this.lineWidth);
 		this.ctx.clearRect(originX, originY, size, size);
 	}
-
 	this.draw = function() {
 		this.redraws_left --;
 
@@ -409,7 +436,6 @@ function Circle(ctx, x, y) {
 		this.ctx.lineWidth = this.lineWidth;
 		this.ctx.strokeStyle = fill;
 		this.ctx.stroke();
-
 		return this.redraws_left;
 	}
 	this.init = function(ctx, x, y) {
@@ -438,7 +464,6 @@ Hotspot.prototype = new Circle();
 
 // return all of these classes
 return {
-	prototype: this.prototype,
 	Widget: Widget,
 	Connection: Connection,
 	Grid: Grid,
