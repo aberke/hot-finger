@@ -302,6 +302,8 @@ function Grid(ctx, connection) {
 	}
 
 	this.setup = function() {
+		setListeners(this.ctx.canvas, move, untouch);
+
 		this.coordinatesToCell = {};
 		this.cellsToCoordinates = {};
 
@@ -395,8 +397,7 @@ function Grid(ctx, connection) {
 
 	this.init = function() {
 		var self = this;
-		setListeners(this.ctx.canvas, move, untouch);
-		this.setup();
+		this.setup(); /* setListeners now called in setup to handle resize */
 	}
 	this.init();
 } /* End of Grid */

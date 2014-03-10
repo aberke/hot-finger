@@ -49,6 +49,18 @@ function animloop() {
 }
 function startupWidgets(){
 	window.onresize = onresize;
+	/* pages like Huffpost take forever to fully load and keep changing 
+		-- problem: then the touch events look distached from where I draw them.
+		-- fix: detect these changes and handle like a resize */
+    var lastHeight = document.body.clientHeight, newHeight, timer;
+    (function checkDocumentHeight(){
+        newHeight = document.body.clientHeight;
+        if( lastHeight != newHeight ) { 
+            onresize();
+        }
+        lastHeight = newHeight;
+        timer = setTimeout(checkDocumentHeight, 2000);
+    })();
 
 	window.requestAnimFrame = (function(){
 		return  window.requestAnimationFrame       ||
@@ -59,6 +71,7 @@ function startupWidgets(){
 		};
 	})();
 	animloop(); // start the animation loop
+
 }
 
 
