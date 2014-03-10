@@ -108,6 +108,7 @@ function main() {
 	this.hotFingerObjects = new HotFingerObjects();
 
 	if (!isCanvasSupported()) { return null; }
+	
 
 	var widgetContainers = document.getElementsByClassName('hot-finger-widget');
 	for (var i=0; i<widgetContainers.length; i++) {
@@ -122,7 +123,21 @@ function main() {
 	}
 	startupWidgets();
 }
-withScripts([DOMAIN + "/widget/objects.js"], main);
+var ready = false;
+function ifReady() {
+	console.log('\n*********************',document.readyState,'\n*********************')
+
+	if (!ready && (document.readyState == "complete")) {
+		console.log('complete!')
+		ready = true;
+		main();
+	}
+}
+withScripts([DOMAIN + "/widget/objects.js"], function() {
+
+	document.onreadystatechange = ifReady;
+	ifReady();
+});
 
 return {widgets: this.widgets};
 })();

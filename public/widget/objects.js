@@ -19,6 +19,12 @@ function animloop() {
 
 --------------------------------------------------------------- */
 console.log('local object.js')
+document.onreadystatechange = function () {
+	console.log('\n*********************',document.readyState,'\n*********************')
+    if (document.readyState == "complete") {
+        console.log('complete!')
+    }
+}
 var HotFingerObjects = function() {
 
 /* ------------ utility functions ------------- */
@@ -40,6 +46,8 @@ function setCanvasSize(container, canvas) {
 	canvas.height = container.clientHeight;
 }
 function setListeners(touchable, moveCallback, untouchCallback) {
+
+
 	var touchable = touchable;
 	var position = findPos(touchable);
 	var move = function(e) {
@@ -90,7 +98,7 @@ function setListeners(touchable, moveCallback, untouchCallback) {
 /* ------------ utility functions above ------------- */
 
 function Widget(container, canvas, connection) {
-	//this.name = "I'M LOCAL!";
+	this.name = "I'M LOCAL!";
 	this.grid;
 
 	this.connection = connection;
