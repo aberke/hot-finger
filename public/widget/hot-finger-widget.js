@@ -3,13 +3,13 @@
 // var HotFinger = function() {
 (function() {
 
-var HOST = "4d731c8b.ngrok.com";
-var DOMAIN = "http://" + HOST;
-var WS 	   = "ws://" + HOST;
+// var HOST = "4d731c8b.ngrok.com";
+// var DOMAIN = "http://" + HOST;
+// var WS 	   = "ws://" + HOST;
 
-// var HOST   = "hot-finger.herokuapp.com";
-// var DOMAIN = "https://" + HOST;
-// var WS 	   = "wss://" + HOST;
+var HOST   = "hot-finger.herokuapp.com";
+var DOMAIN = "https://" + HOST;
+var WS 	   = "wss://" + HOST;
 
 
 
