@@ -19,12 +19,6 @@ function animloop() {
 
 --------------------------------------------------------------- */
 console.log('local object.js')
-document.onreadystatechange = function () {
-	console.log('\n*********************',document.readyState,'\n*********************')
-    if (document.readyState == "complete") {
-        console.log('complete!')
-    }
-}
 var HotFingerObjects = function() {
 
 /* ------------ utility functions ------------- */
@@ -45,33 +39,41 @@ function setCanvasSize(container, canvas) {
 	canvas.width = container.clientWidth;
 	canvas.height = container.clientHeight;
 }
-function setListeners(touchable, moveCallback, untouchCallback) {
+function setupTouchable(touchable, moveCallback, untouchCallback) {
+	console.log('(((((((((((( setupTouchable ))))))))))')
+	//var touchable = touchable;
+	var position = findPos(touchable)
+	var eventCapture = false; // you probably want to use this as true!
+	var setListeners = function() {
+			/* --------------- remove events ---------------------------- */
+			touchable.removeEventListener('touchstart', touchstart, eventCapture);
+			touchable.removeEventListener('touchend', touchend, eventCapture);
+			touchable.removeEventListener('touchmove', touchmove, eventCapture);
 
+			/* my desktop way of simulating touchmove... */
+			touchable.removeEventListener('mousedown', mousedown, eventCapture);
+			touchable.removeEventListener('mouseup', mouseup, eventCapture);
+			touchable.removeEventListener('mousemove', mousemove, eventCapture);
 
-	var touchable = touchable;
-	var position = findPos(touchable);
+			/* --------------- add events ---------------------------- */
+			// touchable.addEventListener('touchstart', touchstart, eventCapture);
+			// touchable.addEventListener('touchend', touchend, eventCapture);
+			// touchable.addEventListener('touchmove', touchmove, eventCapture);
+			// // my desktop way of simulating touchmove...
+			// touchable.addEventListener('mousedown', mousedown, eventCapture);
+			// touchable.addEventListener('mouseup', mouseup, eventCapture);
+			// touchable.addEventListener('mousemove', mousemove, eventCapture);
+	}
+
 	var move = function(e) {
 		moveCallback(e.pageX - position[0], e.pageY - position[1])
 	}
-	var untouch = untouchCallback;
-
-
-	var eventCapture = false; // you probably want to use this as true!
-
-	touchable.addEventListener('touchstart', touchstart, eventCapture);
-	touchable.addEventListener('touchend', touchend, eventCapture);
-	touchable.addEventListener('touchmove', touchmove, eventCapture);
-
-	// my desktop way of simulating touchmove...
-	touchable.addEventListener('mousedown', mousedown, eventCapture);
-	touchable.addEventListener('mouseup', mouseup, eventCapture);
-	touchable.addEventListener('mousemove', mousemove, eventCapture);
 
 	function touchstart(e) {
 		touchmove(e);
 	}
 	function touchend(e) {
-		untouch();
+		untouchCallback();
 	}
 	function touchmove(e) {
 		// If there's exactly one finger inside this element
@@ -92,13 +94,29 @@ function setListeners(touchable, moveCallback, untouchCallback) {
 	}
 	function mouseup(e) {
 		mouseIsDown = false;
-		untouch();
+		untouchCallback();
 	}
+	setListeners();
+	/* pages like Huffpost take forever to fully load and keep changing 
+		-- problem: then the touch events look distached from where I draw them.
+		-- fix: detect these changes and rebind listeners */
+    var newPosition, timer;
+    (function checkPosition(){
+    	console.log('88888888\ncheckPosition\n')
+        newPosition = findPos(touchable);
+        if( position[1] != newPosition[1] ) {
+        	console.log('***********\nposition changed', newPosition)
+        	setListeners();
+        }
+        
+        position = newPosition;
+        timer = setTimeout(checkPosition, 1000);
+    })();
 }
 /* ------------ utility functions above ------------- */
 
 function Widget(container, canvas, connection) {
-	this.name = "I'M LOCAL!";
+	this.name = "----------I'M LOCAL!";
 	this.grid;
 
 	this.connection = connection;
@@ -302,7 +320,7 @@ function Grid(ctx, connection) {
 	}
 
 	this.setup = function() {
-		setListeners(this.ctx.canvas, move, untouch);
+		setupTouchable(this.ctx.canvas, move, untouch);
 
 		this.coordinatesToCell = {};
 		this.cellsToCoordinates = {};
