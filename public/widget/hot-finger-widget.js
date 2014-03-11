@@ -1,6 +1,5 @@
+/* pure javascript -- no jQuery */
 
-
-// var HotFinger = function() {
 (function() {
 
 // var HOST = "4d731c8b.ngrok.com";
@@ -10,6 +9,12 @@
 var HOST   = "hot-finger.herokuapp.com";
 var DOMAIN = "https://" + HOST;
 var WS 	   = "wss://" + HOST;
+
+
+var scripts 	= [
+				   	(DOMAIN + "/widget/objects.js"),
+				   ];
+var stylesheets = [(DOMAIN + "/widget/widget.css")];
 
 
 
@@ -34,23 +39,29 @@ function isCanvasSupported(){
 	var elem = document.createElement('canvas');
 	return !!(elem.getContext && elem.getContext('2d'));
 }
-function addOnOffButton(container, gridID) {
+function createOnOffButton(ONorOFF) {
+	var button = document.createElement('div');
+	button.addEventListener('click', window.toggleHeatMap, false);
+	button.className = "hot-finger-" + ONorOFF + "-button hot-finger-button";
+	button.innerHTML = "TURN " + ONorOFF + " HEATMAP";
+	return button;
+}
+function addOnOffButtons(container, gridID) {
 	var parent = container.parentNode;
 	parent.className += " hot-finger-container-parent";
 
-	var onButton = document.createElement('div');
-	onButton.id = "hot-finger-on-button-" + gridID;
-	onButton.className = 'hot-finger-on-button hot-finger-button';
-	onButton.innerHTML = "TURN ON HEATMAP";
-	onButton.addEventListener('click', window.toggleHeatMap, false);
+	var onButton = createOnOffButton('ON');
 	parent.insertBefore(onButton, container);
 
-	var offButton = document.createElement('div');
-	offButton.id = "hot-finger-off-button-" + gridID;
-	offButton.className = 'hot-finger-off-button hot-finger-button';
-	offButton.innerHTML = "TURN OFF HEATMAP";
+	var offButton = createOnOffButton('OFF');
 	parent.insertBefore(offButton, container);
-	offButton.onclick = window.toggleHeatMap;
+
+	var p = document.createElement('a');
+	p.innerHTML = "What is this heat map?";
+	p.setAttribute("href", "https://hot-finger.herokuapp.com/");
+	p.setAttribute("target", "_blank");
+	p.className = "what-is-hotfinger";
+	parent.insertBefore(p, container);
 }
 
 function onresize() {
@@ -69,8 +80,8 @@ function animloop() {
 window.toggleHeatMap = function() {
 	console.log('toggleHeatMap')
 	window.heatMapOn = (!window.heatMapOn);
-	var offButtons = document.getElementsByClassName('hot-finger-off-button');
-	var onButtons = document.getElementsByClassName('hot-finger-on-button');
+	var offButtons = document.getElementsByClassName('hot-finger-OFF-button');
+	var onButtons = document.getElementsByClassName('hot-finger-ON-button');
 	for (var i=0; i<onButtons.length; i++) {
 		onButtons[i].style.display = (window.heatMapOn ?  "none" : "inline-block");
 	}
@@ -160,7 +171,7 @@ function main() {
 	for (var i=0; i<widgetContainers.length; i++) {
 		var container = widgetContainers[i];
 		var id = gridID(container);
-		addOnOffButton(container, id);
+		addOnOffButtons(container, id);
 		var canvas = addCanvas(container, id);
 		var connection = new this.hotFingerObjects.Connection(id, WS);
 
@@ -169,8 +180,8 @@ function main() {
 	}
 	startupWidgets();
 }
-withStyleSheets([DOMAIN + "/widget/widget.css"]);
-withScripts([DOMAIN + "/widget/objects.js"], main);
+withStyleSheets(stylesheets);
+withScripts(scripts, main);
 
 return {widgets: this.widgets};
 })();

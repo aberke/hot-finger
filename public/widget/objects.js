@@ -35,7 +35,6 @@ function findPos(obj) {
 };
 
 function setCanvasSize(container, canvas) {
-	console.log('setCanvasSize')
 	canvas.width = container.clientWidth;
 	canvas.height = container.clientHeight;
 }
