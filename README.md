@@ -14,5 +14,7 @@ Documentation and Example
 - Huffington Post article on which it was used: 
 	- <http://www.huffingtonpost.com/michael-nirenberg/no-security-phreaking-out_b_4900849.html>
  
-
+Pull Requests?
+---
+Yes Please -- I'm a Go n00b
 I wanted to play with Go and heat it up.
