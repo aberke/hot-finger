@@ -55,13 +55,13 @@ function setupTouchable(touchable, moveCallback, untouchCallback) {
 			touchable.removeEventListener('mousemove', mousemove, eventCapture);
 
 			/* --------------- add events ---------------------------- */
-			// touchable.addEventListener('touchstart', touchstart, eventCapture);
-			// touchable.addEventListener('touchend', touchend, eventCapture);
-			// touchable.addEventListener('touchmove', touchmove, eventCapture);
-			// // my desktop way of simulating touchmove...
-			// touchable.addEventListener('mousedown', mousedown, eventCapture);
-			// touchable.addEventListener('mouseup', mouseup, eventCapture);
-			// touchable.addEventListener('mousemove', mousemove, eventCapture);
+			touchable.addEventListener('touchstart', touchstart, eventCapture);
+			touchable.addEventListener('touchend', touchend, eventCapture);
+			touchable.addEventListener('touchmove', touchmove, eventCapture);
+			// my desktop way of simulating touchmove...
+			touchable.addEventListener('mousedown', mousedown, eventCapture);
+			touchable.addEventListener('mouseup', mouseup, eventCapture);
+			touchable.addEventListener('mousemove', mousemove, eventCapture);
 	}
 
 	var move = function(e) {
