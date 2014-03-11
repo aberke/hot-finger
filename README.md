@@ -1,5 +1,7 @@
 Hot Finger
 =========
+<img width="100px" src="https://hot-finger.herokuapp.com/static/img/flames.png"
+ alt="hot-finger logo" title="Flames" align="right" />
 
 Shares touches with the other readers of the page.
 
@@ -14,5 +16,3 @@ Documentation and Example
  
 
 I wanted to play with Go and heat it up.
-<img src="https://hot-finger.herokuapp.com/static/img/flames.png"
- alt="hot-finger logo" title="Flames" align="right" />
