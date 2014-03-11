@@ -1,0 +1,43 @@
+/* debug */
+
+/*canvas {
+	border: 1px solid red;
+}*/
+
+
+
+.hot-finger-widget .hot-finger-button,
+.hot-finger-button {
+	font-size: 11px;
+	font-family: Arial;
+	font-weight: bold;
+	padding: 5px 6px;
+	cursor: pointer;
+	border-radius: 8px;
+	display: inline-block;
+	opacity: 0;
+}
+.hot-finger-widget .hot-finger-on-button,
+.hot-finger-on-button {
+	color: crimson;
+	background-color: bisque;
+	border: 1px solid orange;
+}
+.hot-finger-widget .hot-finger-on-button:hover,
+.hot-finger-on-button:hover {
+	background-color: orange;
+}
+.hot-finger-widget .hot-finger-off-button,
+.hot-finger-off-button {
+	color: orange;
+	background-color: aliceblue;
+	border: 1px solid cyan;
+}
+.hot-finger-widget .hot-finger-off-button:hover,
+.hot-finger-off-button:hover {
+	background-color: cyan;
+}
+.hot-finger-container-parent:hover .hot-finger-button{
+	opacity: 1;
+}
+

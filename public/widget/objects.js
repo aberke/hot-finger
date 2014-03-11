@@ -35,10 +35,12 @@ function findPos(obj) {
 };
 
 function setCanvasSize(container, canvas) {
+	console.log('setCanvasSize')
 	canvas.width = container.clientWidth;
 	canvas.height = container.clientHeight;
 }
 function setupTouchable(touchable, moveCallback, untouchCallback) {
+
 	var position = findPos(touchable)
 	var eventCapture = false; // you probably want to use this as true!
 	var setListeners = function() {

@@ -34,21 +34,54 @@ function isCanvasSupported(){
 	var elem = document.createElement('canvas');
 	return !!(elem.getContext && elem.getContext('2d'));
 }
+function addOnOffButton(container, gridID) {
+	var parent = container.parentNode;
+	parent.className += " hot-finger-container-parent";
 
+	var onButton = document.createElement('div');
+	onButton.id = "hot-finger-on-button-" + gridID;
+	onButton.className = 'hot-finger-on-button hot-finger-button';
+	onButton.innerHTML = "TURN ON HEATMAP";
+	onButton.addEventListener('click', window.toggleHeatMap, false);
+	parent.insertBefore(onButton, container);
+
+	var offButton = document.createElement('div');
+	offButton.id = "hot-finger-off-button-" + gridID;
+	offButton.className = 'hot-finger-off-button hot-finger-button';
+	offButton.innerHTML = "TURN OFF HEATMAP";
+	parent.insertBefore(offButton, container);
+	offButton.onclick = window.toggleHeatMap;
+}
 
 function onresize() {
 	for (var i=0; i<widgets.length; i++) {
 		widgets[i].onresize();
 	}
 }
+
 function animloop() {
 	requestAnimFrame(animloop);
+	if (!window.heatMapOn) { return; }
 	for (var i=0; i<widgets.length; i++) {
 		widgets[i].onanimate();
 	}
 }
+window.toggleHeatMap = function() {
+	console.log('toggleHeatMap')
+	window.heatMapOn = (!window.heatMapOn);
+	var offButtons = document.getElementsByClassName('hot-finger-off-button');
+	var onButtons = document.getElementsByClassName('hot-finger-on-button');
+	for (var i=0; i<onButtons.length; i++) {
+		onButtons[i].style.display = (window.heatMapOn ?  "none" : "inline-block");
+	}
+	for (var i=0; i<offButtons.length; i++) {
+		offButtons[i].style.display = (window.heatMapOn ? "inline-block" : "none");
+	}
+}
 function startupWidgets(){
 	window.onresize = onresize;
+
+	toggleHeatMap();
 
 	window.requestAnimFrame = (function(){
 		return  window.requestAnimationFrame       ||
@@ -59,10 +92,23 @@ function startupWidgets(){
 		};
 	})();
 	animloop(); // start the animation loop
-
 }
 
 
+var withStyleSheets = function(srcList, callback) {
+	for (var i=0; i<srcList.length; i++) {
+		if (document.createStyleSheet) {
+			document.createStyleSheet(srcList[i]);
+		} else {
+			var ss = document.createElement("link");
+			ss.type = "text/css";
+			ss.rel = "stylesheet";
+			ss.href = srcList[i];
+			document.getElementsByTagName("head")[0].appendChild(ss);
+		}
+	}
+	if (callback) { callback(); }
+};
 var withScripts = function(srcList, callback) {
 	var numScripts = srcList.length;
 	var numLoaded = 0;
@@ -114,6 +160,7 @@ function main() {
 	for (var i=0; i<widgetContainers.length; i++) {
 		var container = widgetContainers[i];
 		var id = gridID(container);
+		addOnOffButton(container, id);
 		var canvas = addCanvas(container, id);
 		var connection = new this.hotFingerObjects.Connection(id, WS);
 
@@ -122,6 +169,7 @@ function main() {
 	}
 	startupWidgets();
 }
+withStyleSheets([DOMAIN + "/widget/widget.css"]);
 withScripts([DOMAIN + "/widget/objects.js"], main);
 
 return {widgets: this.widgets};
