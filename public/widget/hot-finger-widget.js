@@ -49,18 +49,6 @@ function animloop() {
 }
 function startupWidgets(){
 	window.onresize = onresize;
-	/* pages like Huffpost take forever to fully load and keep changing 
-		-- problem: then the touch events look distached from where I draw them.
-		-- fix: detect these changes and handle like a resize */
-    var lastHeight = document.body.clientHeight, newHeight, timer;
-    (function checkDocumentHeight(){
-        newHeight = document.body.clientHeight;
-        if( lastHeight != newHeight ) { 
-            onresize();
-        }
-        lastHeight = newHeight;
-        timer = setTimeout(checkDocumentHeight, 2000);
-    })();
 
 	window.requestAnimFrame = (function(){
 		return  window.requestAnimationFrame       ||
@@ -77,7 +65,6 @@ function startupWidgets(){
 
 var withScripts = function(srcList, callback) {
 	var numScripts = srcList.length;
-	console.log('withScripts', numScripts, srcList)
 	var numLoaded = 0;
     function scriptLoaded() {
         numLoaded++;
@@ -126,7 +113,6 @@ function main() {
 	var widgetContainers = document.getElementsByClassName('hot-finger-widget');
 	for (var i=0; i<widgetContainers.length; i++) {
 		var container = widgetContainers[i];
-		// var parent = container.parentNode;
 		var id = gridID(container);
 		var canvas = addCanvas(container, id);
 		var connection = new this.hotFingerObjects.Connection(id, WS);
@@ -136,21 +122,7 @@ function main() {
 	}
 	startupWidgets();
 }
-var ready = false;
-function ifReady() {
-	console.log('\n*********************',document.readyState,'\n*********************')
-
-	if (!ready && (document.readyState == "complete")) {
-		console.log('complete!')
-		ready = true;
-		main();
-	}
-}
-withScripts([DOMAIN + "/widget/objects.js"], function() {
-
-	document.onreadystatechange = ifReady;
-	ifReady();
-});
+withScripts([DOMAIN + "/widget/objects.js"], main);
 
 return {widgets: this.widgets};
 })();

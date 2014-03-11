@@ -39,8 +39,6 @@ function setCanvasSize(container, canvas) {
 	canvas.height = container.clientHeight;
 }
 function setupTouchable(touchable, moveCallback, untouchCallback) {
-	console.log('(((((((((((( setupTouchable ))))))))))')
-	//var touchable = touchable;
 	var position = findPos(touchable)
 	var eventCapture = false; // you probably want to use this as true!
 	var setListeners = function() {
@@ -101,7 +99,6 @@ function setupTouchable(touchable, moveCallback, untouchCallback) {
 		-- fix: detect these changes and rebind listeners */
     var newPosition, timer;
     (function checkPosition(){
-    	console.log('88888888\ncheckPosition\n')
         newPosition = findPos(touchable);
         if( position[1] != newPosition[1] ) {
         	console.log('***********\nposition changed', newPosition)
@@ -115,7 +112,6 @@ function setupTouchable(touchable, moveCallback, untouchCallback) {
 /* ------------ utility functions above ------------- */
 
 function Widget(container, canvas, connection) {
-	//this.name = "----------I'M LOCAL!";
 	this.grid;
 
 	this.connection = connection;
