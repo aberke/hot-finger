@@ -18,7 +18,6 @@ function animloop() {
 }
 
 --------------------------------------------------------------- */
-console.log('local object.js')
 var HotFingerObjects = function() {
 
 /* ------------ utility functions ------------- */
@@ -116,7 +115,7 @@ function setupTouchable(touchable, moveCallback, untouchCallback) {
 /* ------------ utility functions above ------------- */
 
 function Widget(container, canvas, connection) {
-	this.name = "----------I'M LOCAL!";
+	//this.name = "----------I'M LOCAL!";
 	this.grid;
 
 	this.connection = connection;
