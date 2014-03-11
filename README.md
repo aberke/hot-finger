@@ -1,6 +1,3 @@
-<img src="https://hot-finger.herokuapp.com/static/img/flames.png"
- alt="hot-finger logo" title="Flames" align="right" />
-
 Hot Finger
 =========
 
@@ -17,3 +14,5 @@ Documentation and Example
  
 
 I wanted to play with Go and heat it up.
+<img src="https://hot-finger.herokuapp.com/static/img/flames.png"
+ alt="hot-finger logo" title="Flames" align="right" />
